@@ -3,7 +3,7 @@
 
 Slingshot provides a HTML/Mobile Web client and library for Microsoft SharePoint Server 2010.  Using jQuery Mobile, Slingshot makes it easy to expose tasks, appointments, documents, and other objects from any SharePoint 2010 instance to a mobile device.
 
-To get started, checkout http://github.com/neudesic/slingshot
+To see how this works, checkout http://neudesic.github.com/slingshot
 
 Quick Start
 -----------
