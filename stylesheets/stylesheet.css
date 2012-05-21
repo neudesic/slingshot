@@ -158,6 +158,18 @@ img {
   -ms-box-shadow: 0 0 5px #ebebeb;
 }
 
+.screenshot{
+    width:12pc;
+    text-align: center;
+    border: 0px solid #ebebeb;
+
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+    -ms-box-shadow: none;
+}
+
 pre, code {
   width: 100%;
   color: #222;
