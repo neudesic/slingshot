@@ -1,0 +1,236 @@
+/*
+ Copyright 2012 Neudesic, LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+module("Announcements");
+
+test("Get All Announcements", function()
+{
+    stop();
+    var announcements = slingshot.getAnnouncements(function (data) {
+            ok(data.length > 0, "More than one announcement returned.");
+            start();
+        },
+        function (error) {
+            ok(false, error.message);
+            start();
+        });
+});
+
+test("Get Single Announcement", function()
+{
+    stop();
+    var announcement = slingshot.getAnnouncement(2, function(data){
+        ok(data.Id == 2, "Single announcement by ID returned.");
+        ok(data.Title, "Announcement with non null title returned.");
+        start();
+    },
+        function(error){
+            ok(false, error.message);
+            start();
+    });
+});
+
+test("CRUD Announcement item", function()
+{
+    var announcementTitle = "Test Announcement from unit test";
+    var newAnnouncementTitle = "This announcement was modified by the unit test";
+
+    stop();
+    var newAnnouncement = new slingshot.announcement(0, announcementTitle, "This is a test announcement");
+    // Create a new task
+    slingshot.addAnnouncement(newAnnouncement, function(announcementId, response)
+    {
+        ok(announcementId > 0, "Non negative Id returned from announcement item creation");
+        ok(response.statusCode == 201, "HTTP 201 status code returned from SharePoint");
+
+        // Read the task back
+        var announcement = slingshot.getAnnouncement(announcementId, function(data){
+                ok(data.Title, "Test announcement with non null title returned.");
+                ok(data.Title == announcementTitle, "Title of test announcement was expected");
+
+                // Update the title and send back
+                data.Title = newAnnouncementTitle;
+                slingshot.modifyAnnouncement(data,function(response)
+                {
+                    ok(response.statusCode == 204, "Correct 204 Response expected from object merge");
+                    // Confirm that the title did change
+                    var announcement = slingshot.getAnnouncement(announcementId, function(data){
+                        ok(data.Title == newAnnouncementTitle, "Announcement title was confirmed to have changed.");
+
+                        // Delete the task to complete the CRUD operation
+                        slingshot.deleteAnnouncement(announcementId, function(response){
+                            ok(response.statusCode == 204, "Correct 204 Response expected from object delete");
+                            start();
+                        }, function(error)
+                        {
+                            // Error with the delete
+                            ok(false, error.message);
+                            start();
+                        });
+                    });
+                }, function(error)
+                {
+                    // Error with the update
+                    ok(false, error.message);
+                    start();
+                });
+            },
+            function(error){
+                // Error with the read
+                ok(false, error.message);
+                start();
+            });
+    }, function(error)
+    {
+        // Error with the create
+        ok(false, error.message);
+        start();
+    });
+});
+
+module("Tasks");
+
+test("Get All Tasks", function()
+{
+    stop();
+    var tasks = slingshot.getTasks(function (data) {
+            ok(data.length > 0, "More than one task returned.");
+            start();
+        },
+        function (error) {
+            ok(false, error.message);
+            start();
+        });
+});
+
+test("Get Single Task", function()
+{
+    stop();
+    var announcement = slingshot.getTask(2, function(data){
+            ok(data.Id == 2, "Single task by ID returned.");
+            ok(data.Title, "Task with non null title returned.");
+            start();
+        },
+        function(error){
+            ok(false, error.message);
+            start();
+        });
+});
+
+test("CRUD Task item", function()
+{
+    var taskTitle = "Test Task from API";
+    var newTaskTitle = "This task was modified by the unit test";
+
+    stop();
+    var newTask = new slingshot.task(0, taskTitle, "This is a test task", 0);
+    // Create a new task
+    slingshot.addTask(newTask, function(taskId, response)
+    {
+        ok(taskId > 0, "Non negative Id returned from task item creation");
+        ok(response.statusCode == 201, "HTTP 201 status code returned from SharePoint");
+
+        // Read the task back
+        var announcement = slingshot.getTask(taskId, function(data){
+                ok(data.Title, "Test Task with non null title returned.");
+                ok(data.Title == taskTitle, "Title of test task was expected");
+
+                // Update the title and send back
+                data.Title = newTaskTitle;
+                slingshot.modifyTask(data,function(response)
+                {
+                    ok(response.statusCode == 204, "Correct 204 Response expected from object merge");
+                    // Confirm that the title did change
+                    var announcement = slingshot.getTask(taskId, function(data){
+                        ok(data.Title == newTaskTitle, "Task title was confirmed to have changed.");
+
+                        // Delete the task to complete the CRUD operation
+                        slingshot.deleteTask(taskId, function(response){
+                            ok(response.statusCode == 204, "Correct 204 Response expected from object delete");
+                            start();
+                        }, function(error)
+                        {
+                            // Error with the delete
+                            ok(false, error.message);
+                            start();
+                        });
+                    });
+                }, function(error)
+                {
+                    // Error with the update
+                    ok(false, error.message);
+                    start();
+                });
+            },
+            function(error){
+                // Error with the read
+                ok(false, error.message);
+                start();
+            });
+    }, function(error)
+    {
+        // Error with the create
+        ok(false, error.message);
+        start();
+    });
+});
+
+module("Documents");
+
+test("Get All Documents", function()
+{
+    stop();
+    var tasks = slingshot.getDocuments(slingshot.rootFolder, function (data, fileCount, folderCount) {
+            ok(data.length > 0, "More than one document returned.");
+            ok(fileCount > 0, "File count OK");
+            ok(folderCount > 0, "Folder count OK");
+            start();
+        },
+        function (error) {
+            ok(false, error.message);
+            start();
+        });
+});
+
+module("People");
+
+test("Get All People", function()
+{
+    stop();
+    var people = slingshot.getPeople(function (data) {
+            ok(data.length > 0, "More than one person returned.");
+            start();
+        },
+        function (error) {
+            ok(false, error.message);
+            start();
+        });
+});
+
+test("Get Single Person", function()
+{
+    stop();
+    var person = slingshot.getPerson(1, function(data){
+            ok(data.Id == 1, "Single person by ID returned.");
+            ok(data.Name, "Person with non null name returned.");
+            start();
+        },
+        function(error){
+            ok(false, error.message);
+            start();
+        });
+});
