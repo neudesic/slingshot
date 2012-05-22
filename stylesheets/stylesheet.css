@@ -104,6 +104,10 @@ p {
   margin: 10px 0 15px 0;
 }
 
+.question {
+    font-style:italic;
+}
+
 footer p {
   color: #f2f2f2;
 }
