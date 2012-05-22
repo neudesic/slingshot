@@ -375,7 +375,31 @@ function showDocuments(folder) {
     });
 }
 
-// Page and Control Events
+// Function to add a photo through Cordova
+function addPhoto(imageSourceType){
+    navigator.camera.getPicture(getPictureSuccess, getPictureError, { sourceType: Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
+}
+
+var getPictureSuccess = function(imageUri)
+{
+    console.log(imageUri);
+    //TODO: Make the upload call to the server
+};
+
+var getPictureError = function(message)
+{
+    console.log(message);
+};
+
+function onDeviceReady()
+{
+    // Cordova is installed and ready to run - enable any device specific UI hooks
+    $('#documents-photo-button').show();
+}
+
+$('#home').live('pagecreate', function(){
+    document.addEventListener("deviceready", onDeviceReady, false);
+});
 $('#announcements').live('pageshow', function () {
     showAnnouncements();
 });
