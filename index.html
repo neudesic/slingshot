@@ -13,6 +13,7 @@
     <script src="Scripts/webtoolkit-md5.js"></script>
     <script src="Scripts/slingshot-data.js"></script>
     <script src="Scripts/slingshot-jqm.js"></script>
+    <script src="Scripts/cordova-1.7.0.js"></script>
 </head>
 <body>
 <div data-role="page" id="home">
@@ -137,8 +138,10 @@ Page details for Documents
             <li>Loading...</li>
         </ul>
     </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="shareddocuments-footer-text"></p>
+    <div data-role="footer" data-position="fixed" class="ui-bar">
+        <!--p id="shareddocuments-footer-text"></p-->
+        <!--TODO: tidy up footer on documents screen to include both text and button -->
+        <a id="documents-photo-button" href="javascript:addPhoto();" data-icon="add" style="display:none;float:right;margin-right:27px;">Photo</a>
     </div>
 </div>
 <!--
