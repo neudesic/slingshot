@@ -351,9 +351,13 @@ function showPeople() {
         });
 }
 
+// var for the current folder
+var currentFolder = slingshot.rootFolder;
+
 // Function to display all documents
 function showDocuments(folder) {
     if (!folder) folder = slingshot.rootFolder;
+    currentFolder = folder;
     slingshot.getDocuments(folder, function (data, fileCount, folderCount) {
         $('#shareddocuments-listview').empty();
         // do we need to add an up folder?
@@ -377,14 +381,20 @@ function showDocuments(folder) {
 
 // Function to add a photo through Cordova
 function addPhoto(imageSourceType){
-    navigator.camera.getPicture(getPictureSuccess, getPictureError, { sourceType: Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.FILE_URI });
+    navigator.camera.getPicture(getPictureSuccess, getPictureError, { sourceType: Camera.PictureSourceType.PHOTOLIBRARY, destinationType: Camera.DestinationType.DATA_URL });
 }
 
-var getPictureSuccess = function(imageUri)
-{
-    console.log(imageUri);
-    //TODO: Make the upload call to the server
-};
+function getPictureSuccess(imageData) {
+    //TODO: Move to FT.upload once authentication is supported in Cordova
+    slingshot.uploadDocument(currentFolder, 'photo.jpg', imageData, function(data, response)
+    {
+        // Successful upload - let's refresh the file list
+        showDocuments(currentFolder);
+    }, function(error)
+    {
+        console.log(error);
+    });
+}
 
 var getPictureError = function(message)
 {

@@ -41,6 +41,7 @@ slingshot = new
         this.tasksUri = '/_vti_bin/listdata.svc/Tasks';
         this.documentsUri = '/_vti_bin/listdata.svc/SharedDocuments';
         this.userInformationUri = '/_vti_bin/listdata.svc/UserInformationList';
+        this.copyWebServiceUri = '/_vti_bin/copy.asmx';
         this.rootFolder = '/Shared Documents';
 
         // Function to retrieve an ODATA object by Id
@@ -353,6 +354,23 @@ slingshot = new
             }, function(error){
                 errorCallback(error);
             });
+        };
+
+        // Function to upload a document to a document library
+        this.uploadDocument = function(folder, fileName, documentData, callback, errorCallback)
+        {
+            var copySOAPEnv =
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'><soap12:Body><CopyIntoItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'><SourceUrl>"+fileName+"</SourceUrl><DestinationUrls><string>"+location.protocol+"//"+location.hostname+folder+"/"+fileName+"</string></DestinationUrls><Fields><FieldInformation Type='File' /></Fields><Stream>" + documentData + "</Stream></CopyIntoItems></soap12:Body></soap12:Envelope>";
+            $.ajax({
+                url: slingshot.copyWebServiceUri,
+                type: "POST",
+                dataType: "xml",
+                data: copySOAPEnv,
+                contentType: 'text/xml; charset="utf-8"',
+                headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/CopyIntoItems"},
+                success: function(data) { callback(data, { statusCode:"201" });},
+                error: function(error) { callback(error);}
+                });
         };
     };
 

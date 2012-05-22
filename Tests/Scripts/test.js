@@ -212,6 +212,22 @@ test("Get All Documents", function()
         });
 });
 
+test("Upload Document", function()
+{
+    stop();
+    slingshot.uploadDocument('/Shared Documents','test.txt','VGhpcyBpcyBhIHRlc3Q=',function(data, response){
+        console.log(data);
+        console.log(response);
+        ok(response.statusCode == 201, "Correct 201 Response expected from document creation");
+        start();
+    }, function(error)
+    {
+        console.log(error);
+        ok(false, error.message);
+        start();
+    });
+});
+
 module("People");
 
 test("Get All People", function()
