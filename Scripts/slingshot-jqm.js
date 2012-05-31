@@ -423,7 +423,7 @@ function updateOnlineStatus(newStatus)
 function offlineDetectionTask()
 {
     setTimeout(function() {
-        $.get('favicon.ico', function(data){})
+        $.get('Scripts/pingtest.js', function(data){})
             .success(function(){
                 updateOnlineStatus(true);
             })
