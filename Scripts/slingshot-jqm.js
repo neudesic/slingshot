@@ -401,11 +401,18 @@ var getPictureError = function(message)
     console.log(message);
 };
 
+// Init function that runs on Cordova-enabled applications
 function onDeviceReady()
 {
     // Cordova is installed and ready to run - enable any device specific UI hooks
     $('#documents-photo-button').show();
+    $('#logout-button').show();
+    $('#logout-button').click(function(){
+        // return to the top of the history - i.e. the initial Cordova page
+        window.history.go(-(window.history.length - 1))
+    });
 }
+
 
 $('#home').live('pagecreate', function(){
     document.addEventListener("deviceready", onDeviceReady, false);
