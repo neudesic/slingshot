@@ -401,6 +401,70 @@ var getPictureError = function(message)
     console.log(message);
 };
 
+var onlineStatus;
+
+function updateOnlineStatus(newStatus)
+{
+    if (newStatus != onlineStatus)
+    {
+        onlineStatus = newStatus;
+        if (onlineStatus)
+        {
+            $('#offline-status').text('SharePoint server is online');
+        }
+        else
+        {
+            $('#offline-status').text('SharePoint server is offline');
+        }
+    }
+}
+
+// Task function for background detection of network state
+function offlineDetectionTask()
+{
+    setTimeout(function() {
+        $.get('favicon.ico', function(data){})
+            .success(function(){
+                updateOnlineStatus(true);
+            })
+            .error(function(){
+                updateOnlineStatus(false)});
+        offlineDetectionTask();
+    } , 5000);
+}
+
+// Init function for offline cache
+function initOffline()
+{
+    var cache = window.applicationCache;
+    cache.addEventListener("cached", function () {
+        console.log("cached");
+    }, false);
+    cache.addEventListener("checking", function () {
+        console.log("Checking manifest");
+    }, false);
+    cache.addEventListener("downloading", function () {
+        console.log("Downloading files for offline use");
+    }, false);
+    cache.addEventListener("error", function (e) {
+        console.log("Error " + e);
+    }, false);
+    cache.addEventListener("noupdate", function () {
+        console.log("No update required");
+    }, false);
+    cache.addEventListener("progress", function () {
+        console.log("Download progress");
+    }, false);
+    cache.addEventListener("updateready", function () {
+        cache.swapCache();
+        console.log("Updated cache is ready");
+        window.location.reload(true);
+        console.log("Window reloaded");
+    }, false);
+
+    offlineDetectionTask();
+}
+
 // Init function that runs on Cordova-enabled applications
 function onDeviceReady()
 {
@@ -413,9 +477,9 @@ function onDeviceReady()
     });
 }
 
-
 $('#home').live('pagecreate', function(){
     document.addEventListener("deviceready", onDeviceReady, false);
+    initOffline();
 });
 $('#announcements').live('pageshow', function () {
     showAnnouncements();

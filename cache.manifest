@@ -1,0 +1,20 @@
+CACHE MANIFEST
+# v0.14
+CACHE:
+Index.html
+Scripts/cordova-1.7.0.js
+Scripts/datajs-1.0.3.js
+Scripts/jquery-1.7.2.min.js
+Scripts/jquery.mobile-1.1.0.js
+Scripts/slingshot-data.js
+Scripts/slingshot-jqm.js
+Scripts/webtoolkit-md5.js
+Styles/images/ajax-loader.gif
+Styles/images/ajax-loader.png
+Styles/images/icons-18-black.png
+Styles/images/icons-18-white.png
+Styles/images/icons-36-black.png
+Styles/images/icons-36-white.png
+Styles/jquery.mobile-1.1.0.min.css
+NETWORK:
+*
