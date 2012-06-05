@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="Styles/jquery.mobile-1.1.0.min.css"/>
+    <link rel="stylesheet" href="Styles/default/jquery.mobile-1.1.0.min.css" />
     <script type="text/javascript" src="Scripts/datajs-1.0.3.js"></script>
     <script src="Scripts/jquery-1.7.2.min.js"></script>
     <script src="Scripts/jquery.mobile-1.1.0.js"></script>
@@ -14,187 +14,191 @@
     <script src="Scripts/slingshot-data.js"></script>
     <script src="Scripts/slingshot-jqm.js"></script>
     <script src="Scripts/cordova-1.7.0.js"></script>
+    <script src="Scripts/quirksmode.browserdetect.js"></script>
+    <script src="Scripts/app.js"></script>
 </head>
 <body>
-<div data-role="page" id="home">
-    <div data-role="header" data-position="fixed">
-        <h1>Slingshot Demo</h1>
-        <a href="#" class="ui-btn-right" id="logout-button" style="display:none;">Logout</a>
+    <div data-role="page" id="home" data-theme="c">
+        <div data-role="header" data-position="fixed">
+            <h1>Slingshot Demo</h1>
+            <a href="#" class="ui-btn-right" id="logout-button" style="display: none;">Logout
+            </a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true">
+                <li><a href="#announcements">Announcements</a></li>
+                <li><a href="#tasks">Tasks</a></li>
+                <li><a href="#documents">Shared Documents</a></li>
+            </ul>
+            <ul data-role="listview" data-inset="true">
+                <li><a href="#people">People</a></li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="offline-status">Checking online status...</p>
+        </div>
     </div>
-    <div data-role="content">
-        <ul data-role="listview" data-inset="true">
-            <li><a href="#announcements">Announcements</a></li>
-            <li><a href="#tasks">Tasks</a></li>
-            <li><a href="#documents">Shared Documents</a></li>
-        </ul>
-        <ul data-role="listview" data-inset="true">
-            <li><a href="#people">People</a></li>
-        </ul>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="offline-status">Checking online status...</p>
-    </div>
-</div>
-<!--
+    <!--
 Page details for Announcements
 -->
-<div data-role="page" id="announcements">
-    <div data-role="header" data-position="fixed">
-        <a href="#home" data-icon="home">Home</a>
-        <h1>Announcements</h1>
-        <a href="javascript:addAnnouncement();" data-icon="add">New</a>
+    <div data-role="page" id="announcements" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Announcements</h1>
+            <a href="javascript:addAnnouncement();" data-icon="add">New</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Announcements"
+                id="announcements-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="announcements-footer-text"></p>
+        </div>
     </div>
-    <div data-role="content">
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Announcements" id="announcements-listview">
-            <li>Loading...</li>
-        </ul>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="announcements-footer-text"></p>
-    </div>
-</div>
-<div data-role="page" id="announcement-details">
-    <div data-role="header" data-position="fixed">
-        <a href="#announcements" data-icon="arrow-l">Ann..</a>
-        <h1>Announcement</h1>
-        <a href="javascript:cancelAnnouncement();" data-icon="delete">Cancel</a>
-    </div>
-    <div data-role="content">
-        <input type="hidden" name="anouncement-id" id="announcement-id">
-        <ul data-role="listview" data-inset="true">
-            <li data-role="fieldcontain">
-                <label for="announcement-title">Title</label>
-                <input type="text" name="announcement-title" id="announcement-title">
-            </li>
-            <li data-role="fieldcontain">
-                <label for="announcement-body">Body</label>
-                <textarea cols="40" rows="8" name="announcement-body" id="announcement-body">
+    <div data-role="page" id="announcement-details" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#announcements" data-icon="arrow-l">Ann..</a>
+            <h1>Announcement</h1>
+            <a href="javascript:cancelAnnouncement();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="anouncement-id" id="announcement-id">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="announcement-title">Title</label>
+                    <input type="text" name="announcement-title" id="announcement-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="announcement-body">Body</label>
+                    <textarea cols="40" rows="8" name="announcement-body" id="announcement-body">
                 </textarea>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="announcements-details-footer-text"></p>
+        </div>
     </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="announcements-details-footer-text"></p>
-    </div>
-</div>
-<!--
+    <!--
 Page details for Tasks
 -->
-<div data-role="page" id="tasks">
-    <div data-role="header" data-position="fixed">
-        <a href="#home" data-icon="home">Home</a>
-        <h1>Tasks</h1>
-        <a href="javascript:addTask();" data-icon="add">New</a>
+    <div data-role="page" id="tasks" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Tasks</h1>
+            <a href="javascript:addTask();" data-icon="add">New</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Tasks"
+                id="tasks-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="tasks-footer-text"></p>
+        </div>
     </div>
-    <div data-role="content">
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Tasks" id="tasks-listview">
-            <li>Loading...</li>
-        </ul>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="tasks-footer-text"></p>
-    </div>
-</div>
-<div data-role="page" id="task-details">
-    <div data-role="header" data-position="fixed">
-        <a href="#tasks" data-icon="arrow-l">Tasks</a>
-        <h1>Task</h1>
-        <a href="javascript:cancelTask();" data-icon="delete">Cancel</a>
-    </div>
-    <div data-role="content">
-        <input type="hidden" name="task-id" id="task-id">
-        <ul data-role="listview" data-inset="true">
-            <li data-role="fieldcontain">
-                <label for="task-title">Title</label>
-                <input type="text" name="task-title" id="task-title">
-            </li>
-            <li data-role="fieldcontain">
-                <label for="task-description">Description</label>
-                <textarea cols="40" rows="8" name="task-description" id="task-description">
+    <div data-role="page" id="task-details" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#tasks" data-icon="arrow-l">Tasks</a>
+            <h1>Task</h1>
+            <a href="javascript:cancelTask();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="task-id" id="task-id">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="task-title">Title</label>
+                    <input type="text" name="task-title" id="task-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-description">Description</label>
+                    <textarea cols="40" rows="8" name="task-description" id="task-description">
                 </textarea>
-            </li>
-            <li data-role="fieldcontain">
-                <label for="task-pct-complete">Percentage Complete</label>
-                <input type="range" name="task-pct-complete" id="task-pct-complete" data-type="range" value="50" min="0" max="100" data-highlight="true">
-            </li>
-
-        </ul>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-pct-complete">Percentage Complete</label>
+                    <input type="range" name="task-pct-complete" id="task-pct-complete" data-type="range"
+                        value="50" min="0" max="100" data-highlight="true">
+                </li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="task-details-footer-text"></p>
+        </div>
     </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="task-details-footer-text"></p>
-    </div>
-</div>
-<!--
+    <!--
 Page details for Documents
 -->
-<div data-role="page" id="documents">
-    <div data-role="header" data-position="fixed">
-        <a href="#home" data-icon="home">Home</a>
-
-        <h1>Documents</h1>
-        <a href="javascript:showDocuments();" data-icon="refresh">Refresh</a>
+    <div data-role="page" id="documents" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Documents</h1>
+            <a href="javascript:showDocuments();" data-icon="refresh">Refresh</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Shared Documents"
+                id="shareddocuments-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed" class="ui-bar">
+            <!--p id="shareddocuments-footer-text"></p-->
+            <!--TODO: tidy up footer on documents screen to include both text and button -->
+            <a id="documents-photo-button" href="javascript:addPhoto();" data-icon="add" style="display: none;
+                float: right; margin-right: 27px;">Photo</a>
+        </div>
     </div>
-    <div data-role="content">
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Shared Documents"
-            id="shareddocuments-listview">
-            <li>Loading...</li>
-        </ul>
-    </div>
-    <div data-role="footer" data-position="fixed" class="ui-bar">
-        <!--p id="shareddocuments-footer-text"></p-->
-        <!--TODO: tidy up footer on documents screen to include both text and button -->
-        <a id="documents-photo-button" href="javascript:addPhoto();" data-icon="add" style="display:none;float:right;margin-right:27px;">Photo</a>
-    </div>
-</div>
-<!--
+    <!--
 Page details for People
 -->
-<div data-role="page" id="people">
-    <div data-role="header" data-position="fixed">
-        <a href="#home" data-icon="home">Home</a>
-
-        <h1>People</h1>
-        <a href="javascript:showPeople();" data-icon="refresh">Refresh</a>
-    </div>
-    <div data-role="content">
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search People" id="people-listview">
-            <li>Loading...</li>
-        </ul>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="people-footer-text"></p>
-    </div>
-</div>
-<div data-role="page" id="person-details">
-    <div data-role="header" data-position="fixed">
-        <a href="#people" data-icon="arrow-l">People</a>
-        <h1>Person</h1>
-    </div>
-    <div data-role="content">
-        <input type="hidden" name="person-id" id="person-id">
-        <div  style="text-align:center; margin: 0 auto;">
-        <img id="person-gravatar">
+    <div data-role="page" id="people" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>People</h1>
+            <a href="javascript:showPeople();" data-icon="refresh">Refresh</a>
         </div>
-        <ul data-role="listview" data-inset="true">
-            <li data-role="fieldcontain">
-                <label for="person-name">Name</label>
-                <input type="text" name="person-name" id="person-name">
-            </li>
-            <li data-role="fieldcontain">
-                <label for="person-jobTitle">Job Title</label>
-                <input type="text" name="person-jobTitle" id="person-jobTitle">
-            </li>
-            <li data-role="fieldcontain">
-                <label for="person-department">Department</label>
-                <input type="text" name="person-department" id="person-department">
-            </li>
-        </ul>
-        <a href="#" data-role="button" id="person-email">Send Email</a>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search People"
+                id="people-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="people-footer-text"></p>
+        </div>
     </div>
-    <div data-role="footer" data-position="fixed">
-        <p id="person-details-footer-text"></p>
+    <div data-role="page" id="person-details" data-theme="a">
+        <div data-role="header" data-position="fixed">
+            <a href="#people" data-icon="arrow-l">People</a>
+            <h1>Person</h1>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="person-id" id="person-id">
+            <div style="text-align: center; margin: 0 auto;">
+                <img id="person-gravatar">
+            </div>
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="person-name">Name</label>
+                    <input type="text" name="person-name" id="person-name">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="person-jobTitle">Job Title</label>
+                    <input type="text" name="person-jobTitle" id="person-jobTitle">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="person-department">Department</label>
+                    <input type="text" name="person-department" id="person-department">
+                </li>
+            </ul>
+            <a href="#" data-role="button" id="person-email">Send Email</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="person-details-footer-text"></p>
+        </div>
     </div>
-</div>
-
 </body>
 </html>
