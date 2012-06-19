@@ -448,18 +448,44 @@ function onDeviceReady()
         //TODO - clear the credentials
         $.mobile.changePage("login.html", { transition: "slideup"});
     });
+    $('#offline-status').show();
 
     $('#login-home').live('pagecreate',function()
     {
         $('#login-form input:submit').click(function(event){
             event.preventDefault();
+            var validCredentials = true;
+
             slingshot.username = $('#username-title').val();
+            if (slingshot.username == "")
+            {
+                validCredentials = false;
+                alert("Please enter a valid username");
+                $('#username-title').focus();
+                return;
+            }
             slingshot.password = $('#password-title').val();
+            if (slingshot.password == "")
+            {
+                validCredentials = false;
+                alert("Please enter your password");
+                $('#password-title').focus();
+                return;
+            }
             slingshot.server = $('#slingshot-host').val();
-            //TODO - check whether any of the fields are blank
+            if (slingshot.server == "")
+            {
+                validCredentials = false;
+                alert("Please enter the server name");
+                $('#slingshot-host').focus();
+                return;
+            }
             //TODO - check that these are valid credentials - use a simple AJAX call to the server
             //TODO - add an offline check box also
-            $.mobile.changePage("index.html", { transition: "slidedown"});
+            //Update the offline status accordingly
+            $('#offline-status').text('Connected to '+slingshot.server);
+
+            if (validCredentials) $.mobile.changePage("index.html", { transition: "slidedown"});
         });
     });
 
