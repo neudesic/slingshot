@@ -1,4 +1,0 @@
-function online()
-{
-    return true;
-}

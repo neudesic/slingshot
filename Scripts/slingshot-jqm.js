@@ -401,9 +401,7 @@ var getPictureError = function(message)
     console.log(message);
 };
 
-var onlineStatus;
-
-function updateOnlineStatus(newStatus)
+/*function updateOnlineStatus(newStatus)
 {
     if (newStatus != onlineStatus)
     {
@@ -431,55 +429,79 @@ function offlineDetectionTask()
                 updateOnlineStatus(false)});
         offlineDetectionTask();
     } , 5000);
-}
-
-// Init function for offline cache
-function initOffline()
-{
-    var cache = window.applicationCache;
-    cache.addEventListener("cached", function () {
-        console.log("cached");
-    }, false);
-    cache.addEventListener("checking", function () {
-        console.log("Checking manifest");
-    }, false);
-    cache.addEventListener("downloading", function () {
-        console.log("Downloading files for offline use");
-    }, false);
-    cache.addEventListener("error", function (e) {
-        console.log("Error " + e);
-    }, false);
-    cache.addEventListener("noupdate", function () {
-        console.log("No update required");
-    }, false);
-    cache.addEventListener("progress", function () {
-        console.log("Download progress");
-    }, false);
-    cache.addEventListener("updateready", function () {
-        cache.swapCache();
-        console.log("Updated cache is ready");
-        window.location.reload(true);
-        console.log("Window reloaded");
-    }, false);
-
-    offlineDetectionTask();
-}
+}*/
 
 // Init function that runs on Cordova-enabled applications
 function onDeviceReady()
 {
+    console.log("onDeviceReady - Cordova is ready to go");
+
+    // tell Slingshot that it's running in a Cordova wrapper
+    slingshot.runningInCordova = true;
+
     // Cordova is installed and ready to run - enable any device specific UI hooks
     $('#documents-photo-button').show();
     $('#logout-button').show();
     $('#logout-button').click(function(){
-        // return to the top of the history - i.e. the initial Cordova page
-        window.history.go(-(window.history.length - 1))
+        //TODO - clear the credentials
+        $.mobile.changePage("login.html", { transition: "slideup"});
     });
+
+    $('#login-home').live('pagecreate',function()
+    {
+        $('#login-form input:submit').click(function(event){
+            event.preventDefault();
+            slingshot.username = $('#username-title').val();
+            slingshot.password = $('#password-title').val();
+            slingshot.server = $('#slingshot-host').val();
+            //TODO - check whether any of the fields are blank
+            //TODO - check that these are valid credentials - use a simple AJAX call to the server
+            //TODO - add an offline check box also
+            $.mobile.changePage("index.html", { transition: "slidedown"});
+        });
+    });
+
+    // redirect to the Cordova login page
+    $.mobile.changePage("login.html");
+}
+
+function loadjscssfile(filename, filetype) {
+    if (filetype == "js") {
+        var fileref = document.createElement('script')
+        fileref.setAttribute("type", "text/javascript")
+        fileref.setAttribute("src", filename)
+    }
+    else if (filetype == "css") {
+        var fileref = document.createElement("link")
+        fileref.setAttribute("rel", "stylesheet")
+        fileref.setAttribute("type", "text/css")
+        fileref.setAttribute("href", filename)
+    }
+    if (typeof fileref != "undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref)
 }
 
 $('#home').live('pagecreate', function(){
+    console.log("Welcome to Slingshot!");
+
+    switch (BrowserDetect.browser.toLowerCase()) {
+        case "chrome":
+            console.log("Browser detected as chrome");
+            break;
+        case "mozilla": //Android
+            console.log("Browser detected as Android");
+            break;
+        case "safari": //iOS
+            console.log("Browser detected as Safari");
+            //loadjscssfile("Styles/jquery.mobile-1.1.0.min.css", "css");
+            break;
+        default:
+            console.log("Browser type not detected.");
+            break;
+    }
+
+    console.log("Adding event listener for Cordova");
     document.addEventListener("deviceready", onDeviceReady, false);
-    initOffline();
 });
 $('#announcements').live('pageshow', function () {
     showAnnouncements();

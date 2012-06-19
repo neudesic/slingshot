@@ -37,6 +37,10 @@ slingshot = new
 
         // public variables
         this.verbose = true;
+        this.runningInCordova = false;
+        this.username = "";
+        this.password = "";
+        this.server = "";
         this.announcementsUri = '/_vti_bin/listdata.svc/Announcements';
         this.tasksUri = '/_vti_bin/listdata.svc/Tasks';
         this.documentsUri = '/_vti_bin/listdata.svc/SharedDocuments';
@@ -48,22 +52,54 @@ slingshot = new
         var getObject = function(uri, id, callback, errorCallback)
         {
             Debug('getObject',[uri,id].join(','));
-            OData.request({
-                requestUri:[uri, '(', id, ')'].join('')
-            }, function (data) {
-                callback(data);
-            }, function (error) {
-                errorCallback(error);
-            });
+            var requestUri = "";
+            if (slingshot.runningInCordova)
+            {
+                var uriString = [uri, '(', id, ')'].join('');
+                requestUri = {
+                    requestUri:['http://',slingshot.server,uriString].join(''),
+                    user:slingshot.username,
+                    password:slingshot.password
+                };
+            }
+            else
+            {
+                requestUri = {
+                    requestUri:[uri, '(', id, ')'].join('')
+                };
+            }
+
+            OData.request(
+                    requestUri
+                , function (data) {
+                    callback(data);
+                }, function (error) {
+                    errorCallback(error);
+                });
         };
 
         // Function to retrieve an array of ODATA objects
         var getObjects = function(uri, callback, errorCallback)
         {
             Debug('getObjects',[uri].join(','));
-            OData.request({
-                requestUri:uri
-            }, function (data) {
+            var requestUri = "";
+            if (slingshot.runningInCordova)
+            {
+                requestUri = {
+                    requestUri:['http://',slingshot.server,uri].join(''),
+                    user:slingshot.username,
+                    password:slingshot.password
+                };
+            }
+            else
+            {
+                requestUri = {
+                    requestUri:uri
+                };
+            }
+
+            OData.request(requestUri,
+                function (data) {
                 callback(data);
             }, function (error) {
                 errorCallback(error);
@@ -74,11 +110,29 @@ slingshot = new
         var addObject = function(uri, newObject, callback, errorCallback)
         {
             Debug('addObject',[uri, newObject.Id, newObject.Title].join(','));
-            OData.request({
-                requestUri:uri,
-                method:"POST",
-                data: newObject
-            }, function (data, response)
+            var requestUri = "";
+            if (slingshot.runningInCordova)
+            {
+                requestUri = {
+                    requestUri:['http://',slingshot.server,uri].join(''),
+                    user:slingshot.username,
+                    password:slingshot.password,
+                    method:"POST",
+                    data: newObject
+                };
+            }
+            else
+            {
+                requestUri = {
+                    requestUri:uri,
+                    method:"POST",
+                    data: newObject
+                };
+            }
+
+            OData.request(
+                  requestUri
+                , function (data, response)
             {
                 callback(data, response);
             }, function (error)
@@ -91,12 +145,31 @@ slingshot = new
         var modifyObject = function(uri, modifiedObject, callback, errorCallback)
         {
             Debug('modifyObject',[uri, modifiedObject.Id, modifiedObject.Title].join(','));
-            OData.request({
-                requestUri:[uri, '(', modifiedObject.Id, ')'].join(''),
-                method:"POST",
-                headers:{"X-HTTP-Method":"MERGE","If-Match":"*"},
-                data: modifiedObject
-            }, function (data,response)
+            var requestUri = "";
+            if (slingshot.runningInCordova)
+            {
+                var uriString = [uri, '(', modifiedObject.Id, ')'].join('');
+                requestUri = {
+                    requestUri:['http://',slingshot.server,uriString].join(''),
+                    user:slingshot.username,
+                    password:slingshot.password,
+                    method:"POST",
+                    headers:{"X-HTTP-Method":"MERGE","If-Match":"*"},
+                    data: modifiedObject
+                };
+            }
+            else
+            {
+                requestUri = {
+                    requestUri:[uri, '(', modifiedObject.Id, ')'].join(''),
+                    method:"POST",
+                    headers:{"X-HTTP-Method":"MERGE","If-Match":"*"},
+                    data: modifiedObject
+                };
+            }
+
+            OData.request(requestUri
+                , function (data,response)
             {
                 callback(response);
             }, function (error)
@@ -109,11 +182,29 @@ slingshot = new
         var deleteObject = function(uri, id, callback, errorCallback)
         {
             Debug('deleteObject',[uri, id].join(','));
-            OData.request({
-                requestUri:[uri, '(', id, ')'].join(''),
-                method:"POST",
-                headers:{"X-HTTP-Method":"DELETE","If-Match":"*"}
-            }, function (data,response)
+            var requestUri = "";
+            if (slingshot.runningInCordova)
+            {
+                var uriString = [uri, '(', id, ')'].join('');
+                requestUri = {
+                    requestUri:['http://',slingshot.server,uriString].join(''),
+                    user:slingshot.username,
+                    password:slingshot.password,
+                    method:"POST",
+                    headers:{"X-HTTP-Method":"DELETE","If-Match":"*"}
+                };
+            }
+            else
+            {
+                requestUri = {
+                    requestUri:[uri, '(', id, ')'].join(''),
+                    method:"POST",
+                    headers:{"X-HTTP-Method":"DELETE","If-Match":"*"}
+                };
+            }
+
+            OData.request(requestUri
+                , function (data,response)
             {
                 callback(response);
             }, function (error)
@@ -360,9 +451,11 @@ slingshot = new
         this.uploadDocument = function(folder, fileName, documentData, callback, errorCallback)
         {
             var copySOAPEnv =
-                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'><soap12:Body><CopyIntoItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'><SourceUrl>"+fileName+"</SourceUrl><DestinationUrls><string>"+location.protocol+"//"+location.hostname+folder+"/"+fileName+"</string></DestinationUrls><Fields><FieldInformation Type='File' /></Fields><Stream>" + documentData + "</Stream></CopyIntoItems></soap12:Body></soap12:Envelope>";
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'><soap12:Body><CopyIntoItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'><SourceUrl>"+fileName+"</SourceUrl><DestinationUrls><string>"+"http://"+slingshot.server+folder+"/"+fileName+"</string></DestinationUrls><Fields><FieldInformation Type='File' /></Fields><Stream>" + documentData + "</Stream></CopyIntoItems></soap12:Body></soap12:Envelope>";
             $.ajax({
-                url: slingshot.copyWebServiceUri,
+                url: ['http://',slingshot.server,slingshot.copyWebServiceUri].join(''),
+                username:slingshot.username,
+                password:slingshot.password,
                 type: "POST",
                 dataType: "xml",
                 data: copySOAPEnv,
