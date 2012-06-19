@@ -465,39 +465,23 @@ function onDeviceReady()
     $.mobile.changePage("login.html");
 }
 
-function loadjscssfile(filename, filetype) {
-    if (filetype == "js") {
-        var fileref = document.createElement('script')
-        fileref.setAttribute("type", "text/javascript")
-        fileref.setAttribute("src", filename)
-    }
-    else if (filetype == "css") {
-        var fileref = document.createElement("link")
-        fileref.setAttribute("rel", "stylesheet")
-        fileref.setAttribute("type", "text/css")
-        fileref.setAttribute("href", filename)
-    }
-    if (typeof fileref != "undefined")
-        document.getElementsByTagName("head")[0].appendChild(fileref)
+function isAndroid(){
+    return navigator.userAgent.indexOf("Android") > 0;
+}
+
+function isiOS(){
+    return ( navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0);
 }
 
 $('#home').live('pagecreate', function(){
     console.log("Welcome to Slingshot!");
 
-    switch (BrowserDetect.browser.toLowerCase()) {
-        case "chrome":
-            console.log("Browser detected as chrome");
-            break;
-        case "mozilla": //Android
-            console.log("Browser detected as Android");
-            break;
-        case "safari": //iOS
-            console.log("Browser detected as Safari");
-            //loadjscssfile("Styles/jquery.mobile-1.1.0.min.css", "css");
-            break;
-        default:
-            console.log("Browser type not detected.");
-            break;
+    if(isAndroid()){
+        console.log("android detected");
+        $("script").attr("src", "Scripts/Android/cordova-1.8.1.js").appendTo("head");
+    }else if(isiOS()){
+        console.log("ios detected");
+        $("script").attr("src", "Scripts/iOS/cordova-1.8.1.js").appendTo("head");
     }
 
     console.log("Adding event listener for Cordova");
