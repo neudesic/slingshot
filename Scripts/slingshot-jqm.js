@@ -21,6 +21,8 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var DEBUG_ANDROID_THEME = false;
+
 // Function to strip the HTML from a task description
 function stripHTML(content)
 {
@@ -478,6 +480,8 @@ $('#home').live('pagecreate', function(){
 
     if(isAndroid()){
         console.log("android detected");
+        DEBUG_ANDROID_THEME = true;
+        $("script").attr("src", "Styles/Android/jquery.mobile.android-theme.js").appendTo("head");
         $("script").attr("src", "Scripts/Android/cordova-1.8.1.js").appendTo("head");
     }else if(isiOS()){
         console.log("ios detected");
