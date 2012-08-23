@@ -46,7 +46,11 @@ slingshot = new
         this.documentsUri = '/_vti_bin/listdata.svc/SharedDocuments';
         this.userInformationUri = '/_vti_bin/listdata.svc/UserInformationList';
         this.copyWebServiceUri = '/_vti_bin/copy.asmx';
+        this.listWebServiceUri = '/_vti_bin/lists.asmx';
+        this.workflowWebServiceUri = '/_vti_bin/workflow.asmx';
         this.rootFolder = '/Shared Documents';
+        this.testserver='slingshottest';
+        this.taskListGuid = "";
 
         // Function to retrieve an ODATA object by Id
         var getObject = function(uri, id, callback, errorCallback)
@@ -229,16 +233,27 @@ slingshot = new
         // Used to map ODATA objects directly to JS Task objects
         var mapTask = function(data)
         {
-            return new slingshot.task(data.Id, data.Title, data.Description, data.Complete);
+            return new slingshot.task(data.Id, data.Title, data.Description, data.Complete, data.StatusValue, data.AssignedToId, data.DueDate, data.RelatedContent, data.ContentType, data.Outcome);
         };
 
         // JS class for a sharepoint task
-        this.task = function (Id, Title, Description, Complete) {
+        this.task = function (Id, Title, Description, Complete, StatusValue, AssignedToId, DueDate, RelatedContent, ContentType, Outcome) {
             this.Id = Id;
             this.Title = Title;
             this.Description = Description;
             this.Complete = Complete;
+            this.StatusValue = StatusValue;
+            this.AssignedToId=AssignedToId;
+            this.DueDate=DueDate;
+            this.RelatedContent=RelatedContent;
+            this.ContentType=ContentType;
+            this.Outcome=Outcome;
         };
+
+        this.approveItem = function(Id){
+            this.Id=Id;
+            this._ModerationStatus=0;
+        }
 
         // JS class for a sharepoint file
         this.file = function (id, name, path) {
@@ -464,6 +479,77 @@ slingshot = new
                 success: function(data) { callback(data, { statusCode:"201" });},
                 error: function(error) { callback(error);}
                 });
+        };
+
+        //Function to update task list item
+        this.updateApprovalItem = function(listName, item, moderationStatus, callback, errorCallback)
+        {
+            if(slingshot.taskListGuid==""){
+                slingshot.getListGuid(listName);
+            }
+
+            var alterSOAPEnv=
+                ["<?xml version='1.0' encoding='utf-8'?>",
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'>",
+                    "<soap12:Body>",
+                        "<AlterToDo xmlns='http://schemas.microsoft.com/sharepoint/soap/workflow/'>",
+                            "<item>",item.RelatedContent.substring(0,item.RelatedContent.lastIndexOf(',')),"</item>",
+                            "<todoId>",item.Id,"</todoId>",
+                            "<todoListId>",slingshot.taskListGuid,"</todoListId>",
+                            "<taskData>",
+                                "<my:myFields xmlns:my= 'http://schemas.microsoft.com/office/infopath/2003/myXSD'>",
+                                    "<my:TaskStatus>",item.Outcome,"</my:TaskStatus>",
+                                    "<my:Status>",item.StatusValue,"</my:Status>"+
+                                    "<my:PercentComplete>",item.Complete,"</my:PercentComplete>",
+                                "</my:myFields>",
+                            "</taskData>",
+                        "</AlterToDo>",
+                    "</soap12:Body>",
+                "</soap12:Envelope>"].join('');
+
+                $.ajax({
+                url: slingshot.workflowWebServiceUri,
+                username:slingshot.username,
+                password:slingshot.password,
+                type: "POST",
+                dataType: "xml",
+                data: alterSOAPEnv,
+                contentType: 'text/xml; charset="utf-8"',
+                headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/workflow/AlterToDo"},
+                success: function(data) { callback(data, { statusCode:"201" });},
+                error: function(error) { callback(error);}
+            });
+        }
+
+        //Function to get GUID for Tasks list
+        this.getListGuid = function(listName){
+        var getListEnv =
+            ["<?xml version='1.0' encoding='utf-8'?>",
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'>",
+                    "<soap12:Body>",
+                        "<GetList xmlns='http://schemas.microsoft.com/sharepoint/soap/'>",
+                            "<listName>",listName,"</listName>",
+                        "</GetList>",
+                    "</soap12:Body>",
+                "</soap12:Envelope>"].join('');
+
+        $.ajax({
+            url: slingshot.listWebServiceUri,
+            username:slingshot.username,
+            password:slingshot.password,
+            async:false,
+            type: "POST",
+            dataType: "xml",
+            data: getListEnv,
+            contentType: 'text/xml; charset="utf-8"',
+            headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/GetList"},
+            success: function(data, status, xhr) {
+                var response = xhr.responseText;
+                var Guid = response.substr(response.indexOf("Name")+7, 36);
+                slingshot.taskListGuid=Guid;
+            },
+            error: function(error) { callback(error);}
+        });
         };
     };
 

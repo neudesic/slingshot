@@ -169,7 +169,6 @@ function checkIfAnnouncementNeedsUpdating(){
         });
     }
 }
-
 // Function to show the details of a single task
 function showTask(id) {
     slingshot.getTask(id, function (data) {
@@ -185,13 +184,108 @@ function showTask(id) {
             }
 
             $.mobile.changePage('#task-details');
+            var assignedToPerson = slingshot.getPerson(data.AssignedToId, function(person){
+                $('#task-assignedTo').val(person.Name);
+            }, function(error){
+                console.log(error);
+            });
             $('#task-pct-complete').val(data.Complete * 100).slider('refresh');
+            $('#task-status').val(data.StatusValue);
+            $('#task-outcome').val(data.Outcome);
         },
         function (error) {
             console.log(error);
         });
 }
 
+// Function to show the details of a single workflow task
+function showWorkflowTask(id) {
+    slingshot.getTask(id, function (data) {
+            $('#workflow-task-id').val(id);
+            $('#workflow-task-title').val(data.Title);
+            if (data.Description != null)
+            {
+                $('#workflow-task-description').val(stripHTML(data.Description));
+            }
+            else
+            {
+                $('#workflow-task-description').val('');
+            }
+
+            $.mobile.changePage('#workflow-task-details');
+            //$('#workflow-task-pct-complete').val(data.Complete * 100).slider('refresh');
+            $('#workflow-task-status').val(data.StatusValue);
+            var assignedToPerson = slingshot.getPerson(data.AssignedToId, function(person){
+                $('#workflow-task-assignedTo').val(person.Name);
+            }, function(error){
+                console.log(error);
+            });
+
+            var dateValue = new Date(parseInt(data.DueDate.substr(6)));
+            var displayDate = dateValue.format("mm/dd/yyyy");
+            $('#workflow-task-due-date').val(displayDate);
+            $('#workflow-task-relatedContent').val(data.RelatedContent.substring(0, data.RelatedContent.lastIndexOf(',')));
+            if(data.Outcome!=null)
+            {
+                $('#workflow-task-outcome').val(data.Outcome);
+            }
+            else
+            {
+                $('#workflow-task-outcome').val('');
+            }
+
+            $('#workflow-approve-button').unbind();
+            $('#workflow-approve-button').bind("click",{Param1:data}, function(event){
+                approveDocument(event.data.Param1);
+            });
+
+            $('#workflow-reject-button').unbind();
+            $('#workflow-reject-button').bind("click", {Param1:data}, function(event){
+                rejectDocument(event.data.Param1);
+            });
+
+        },
+        function (error) {
+            console.log(error);
+        });
+}
+
+//Function to approve a document in an approval workflow
+function approveDocument(data){
+    data.Outcome="Approved";
+    data.Complete=1.00;
+    data.StatusValue="Completed";
+    var dateValue = new Date(parseInt(data.DueDate.substr(6)));
+    data.DueDate=dateValue.format("isoDateTime");
+    
+    slingshot.updateApprovalItem("Tasks", data, 0, function(data, response)
+    {
+        // Successful update - let's refresh the task list
+        showTasks();
+        $.mobile.changePage('#tasks');
+    }, function(error)
+    {
+        console.log(error);
+    });
+}
+
+//Function to reject a document in an approval workflow
+function rejectDocument(data){
+    data.Outcome="Rejected";
+    data.Complete=1.00;
+    data.StatusValue="Completed";
+    var dateValue = new Date(parseInt(data.DueDate.substr(6)));
+    data.DueDate=dateValue.format("isoDateTime");
+    slingshot.updateApprovalItem("Tasks", data, 1, function(data, response)
+    {
+        // Successful update - let's refresh the task list
+        showTasks();
+        $.mobile.changePage('#tasks');
+    }, function(error)
+    {
+        console.log(error);
+    });
+}
 // Function to display all tasks updating the list view and footer elements
 function showTasks(showDeleteIcon) {
     slingshot.getTasks(function (data) {
@@ -200,6 +294,10 @@ function showTasks(showDeleteIcon) {
                 if (showDeleteIcon)
                 {
                     $('#tasks-listview').append(['<li data-icon="delete"><a href="javascript:deleteTask(', data[x].Id, ');">', data[x].Title, '</a></li>'].join(''));
+                }
+                if(data[x].ContentType.substring(0,8)=="Approval")//data[x].ContentType.contains('Approval') )//data[x] is an approval task
+                {
+                    $('#tasks-listview').append(['<li><a href="javascript:showWorkflowTask(', data[x].Id, ');">', data[x].Title, '</a></li>'].join(''));
                 }
                 else
                 {
@@ -249,7 +347,7 @@ function deleteTask(id){
 // Function to check whether the task has been modified and needs updating
 function checkIfTaskNeedsUpdating(){
     // get the task to do a compare
-    var displayedTask = new slingshot.task($('#task-id').val(), $('#task-title').val(), $('#task-description').val(), $('#task-pct-complete').val() / 100);
+    var displayedTask = new slingshot.task($('#task-id').val(), $('#task-title').val(), $('#task-description').val(), $('#task-pct-complete').val() / 100, $('#task-status').val());
 
     // Check if this is a new task to be added
     if (displayedTask.Id == -1)
@@ -276,6 +374,7 @@ function checkIfTaskNeedsUpdating(){
             if (displayedTask.Title != data.Title) needsUpdating = true;
             if (displayedTask.Description != stripHTML(data.Description)) needsUpdating = true;
             if (displayedTask.Complete != data.Complete) needsUpdating = true;
+            if(displayedTask.StatusValue != data.StatusValue) needsUpdating = true;
 
             if (needsUpdating)
             {

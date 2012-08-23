@@ -12,6 +12,7 @@
     <script src="Scripts/webtoolkit-md5.js"></script>
     <script src="Scripts/slingshot-data.js"></script>
     <script src="Scripts/slingshot-jqm.js"></script>
+    <script type="text/javascript" src="Scripts/date.format.js"></script>
     <link rel="stylesheet" href="Styles/jquery.mobile-1.1.0.min.css" />
     <link rel="stylesheet" href="Styles/Android/android-theme.css"/>
 </head>
@@ -117,6 +118,14 @@ Page details for Tasks
                 </textarea>
                 </li>
                 <li data-role="fieldcontain">
+                    <label for="task-assignedTo">Assigned To</label>
+                    <input type="text" name="task-assignedTo" id="task-assignedTo"/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-status">Status</label>
+                    <input type="text" name="task-status" id="task-status"  />
+                </li>
+                <li data-role="fieldcontain">
                     <label for="task-pct-complete">Percentage Complete</label>
                     <input type="range" name="task-pct-complete" id="task-pct-complete" data-type="range"
                         value="50" min="0" max="100" data-highlight="true">
@@ -125,6 +134,57 @@ Page details for Tasks
         </div>
         <div data-role="footer" data-position="fixed">
             <p id="task-details-footer-text"></p>
+        </div>
+    </div>
+    <!--Page details for a workflow task-->
+    <div data-role="page" id="workflow-task-details">
+        <div data-role="header" data-position="fixed">
+            <a href="#tasks" data-icon="arrow-l">Tasks</a>
+            <h1>Workflow Task</h1>
+            <a href="javascript:cancelTask();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="task-id" id="workflow-task-id">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-title">Title</label>
+                    <input type="text" name="workflow-task-title" id="workflow-task-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-status">Status</label>
+                    <input type="text" name="workflow-task-status" id="workflow-task-status" disabled />
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-assignedTo">Assigned To</label>
+                    <input type="text" name="workflow-task-assignedTo" id="workflow-task-assignedTo" disabled/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-description">Description</label>
+                    <textarea cols="40" rows="8" name="workflow-task-description" id="workflow-task-description">
+                    </textarea>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-due-date">Due Date</label>
+                    <input type="datetime" name="workflow-task-due-date" id="workflow-task-due-date" disabled/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-outcome">Outcome</label>
+                    <input type="text" name="workflow-task-outcome" id="workflow-task-outcome" disabled/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-relatedContent">Related Content</label>
+                    <input type="text" name="workflow-task-relatedContent" id="workflow-task-relatedContent">
+                </li>
+            </ul>
+            <!--<a href="#" data-role="button" data-icon="info" data-mini="true" data-inline="true" id="workflow-document-button">View Document</a>
+            <br/>-->
+            <a data-role="button" data-icon="check" data-mini="true" data-inline="true" id="workflow-approve-button">Approve</a>
+            <a data-role="button" data-icon="minus" data-mini="true" data-inline="true" id="workflow-reject-button">Reject</a>
+
+
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="workflow-task-details-footer-text"></p>
         </div>
     </div>
     <!--
