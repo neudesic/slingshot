@@ -244,6 +244,11 @@ function showWorkflowTask(id) {
                 rejectDocument(event.data.Param1);
             });
 
+            $('#workflow-document-button').unbind();
+            $('#workflow-document-button').bind("click",function(){
+                window.open(data.RelatedContent.substring(0,data.RelatedContent.lastIndexOf(',')));
+            });
+
         },
         function (error) {
             console.log(error);

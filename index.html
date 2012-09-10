@@ -145,7 +145,7 @@ Page details for Tasks
         </div>
         <div data-role="content">
             <input type="hidden" name="task-id" id="workflow-task-id">
-            <ul data-role="listview" data-inset="true">
+            <ul data-role="listview" data-inset="true" id="workflow-task-listview">
                 <li data-role="fieldcontain">
                     <label for="workflow-task-title">Title</label>
                     <input type="text" name="workflow-task-title" id="workflow-task-title">
@@ -171,13 +171,13 @@ Page details for Tasks
                     <label for="workflow-task-outcome">Outcome</label>
                     <input type="text" name="workflow-task-outcome" id="workflow-task-outcome" disabled/>
                 </li>
-                <li data-role="fieldcontain">
+                <!--<li data-role="fieldcontain">
                     <label for="workflow-task-relatedContent">Related Content</label>
                     <input type="text" name="workflow-task-relatedContent" id="workflow-task-relatedContent">
-                </li>
+                </li>-->
             </ul>
-            <!--<a href="#" data-role="button" data-icon="info" data-mini="true" data-inline="true" id="workflow-document-button">View Document</a>
-            <br/>-->
+            <a rel="external" target="_blank" data-role="button" data-icon="info" data-mini="true" data-inline="true" id="workflow-document-button">View Document</a>
+            <br/>
             <a data-role="button" data-icon="check" data-mini="true" data-inline="true" id="workflow-approve-button">Approve</a>
             <a data-role="button" data-icon="minus" data-mini="true" data-inline="true" id="workflow-reject-button">Reject</a>
 
