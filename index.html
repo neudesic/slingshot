@@ -13,8 +13,15 @@
     <script src="Scripts/slingshot-data.js"></script>
     <script src="Scripts/slingshot-jqm.js"></script>
     <script type="text/javascript" src="Scripts/date.format.js"></script>
+	<script type="text/javascript" src="Scripts/dhxscheduler_mobile.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.core.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.datebox.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.calbox.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.flipbox.min.js"></script>
     <link rel="stylesheet" href="Styles/jquery.mobile-1.1.0.min.css" />
     <link rel="stylesheet" href="Styles/Android/android-theme.css"/>
+	<link rel="stylesheet" href="Styles/dhxscheduler_mobile.css"/>
+	<link rel="stylesheet" href="Styles/jqm-datebox.min.css"/>
 </head>
 <body>
     <div data-role="page" id="home">
@@ -28,6 +35,7 @@
                 <li><a href="#announcements">Announcements</a></li>
                 <li><a href="#tasks">Tasks</a></li>
                 <li><a href="#documents">Shared Documents</a></li>
+				<li><a onclick="window.open('./calendar.html','_blank')" id="calendar-button">Calendar</a></li>
             </ul>
             <ul data-role="listview" data-inset="true">
                 <li><a href="#people">People</a></li>
@@ -258,5 +266,31 @@ Page details for People
             <p id="person-details-footer-text"></p>
         </div>
     </div>
+	<!--Page details for Calendar-->
+	<div data-role="page" id="addCalendarItem">
+		<div data-role="header" data-position="inline" id="calendar-header">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Add Calendar Item</h1>
+        </div>
+        <div data-role="content" id="calendar-content">
+			<!--<form action="javascript:slingshot.addCalendarItem('Calendar', function(error){console.log(error);});">-->
+			<form action="javascript:slingshot.validateAddCalendarItemData();">
+				Title: <input type="text" id="addCalendarItem-Title" required="required" class="required"/><br/>
+				Location: <input type="text" id="addCalendarItem-Location" required="required" class="required"/><br/>
+				Start Date: <input name="addCalendarItem-StartDate" id="addCalendarItem-StartDate" type="text" data-role="datebox" data-options='{"mode": "calbox", "useTodayButton": true, "disableManualInput":true, "closeCallback": "$(\"#addCalendarItem-StartTime\").datebox(\"open\");"}' required="required"/ class="required"><br/>
+				Start Time: <input name="addCalendarItem-StartTime" id="addCalendarItem-StartTime" type="text" data-role="datebox" data-options='{"mode": "timeflipbox","overrideTimeFormat": 12}' required="required" class="required"/><br/>
+				End Date: <input name="addCalendarItem-EndDate" id="addCalendarItem-EndDate" type="text" data-role="datebox" data-options='{"mode": "calbox", "useTodayButton": true, "closeCallback": "$(\"#addCalendarItem-EndTime\").datebox(\"open\");"}' required="required" class="required"/><br/>
+				End Time: <input name="addCalendarItem-EndTime" id="addCalendarItem-EndTime" type="text" data-role="datebox" data-options='{"mode": "timeflipbox","overrideTimeFormat": 12}' required="required" class="required"/><br/>
+				Description: <textarea cols="40" rows="8" name="addCalendarItem-Desc" id="addCalendarItem-Desc" required="required" class="required"></textarea><br/>
+				<input type="submit" value="Add New Item"/>
+			</form>
+			<script type="text/javascript">
+				$('<span style="color: #FF0000;">*</span>').insertBefore('.required');
+			</script>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="calendar-footer-text"></p>
+        </div>
+	</div>
 </body>
 </html>

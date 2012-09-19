@@ -507,6 +507,51 @@ var getPictureError = function(message)
     console.log(message);
 };
 
+//function to initialize the mobile calendar
+function initializeCalendar(){
+	slingshot.getCalendarItems('Calendar', function(error){console.log(error);});
+
+	var currentTime = new Date();
+	var month = currentTime.getMonth();
+	var day = currentTime.getDate();
+	var year = currentTime.getFullYear();
+	scheduler.config.init_date = new Date(year,month,day);
+	scheduler.config.item_date = "%m/%j/%Y";
+	scheduler.config.hour_date = "%h:%i %a";
+	scheduler.config.scale_hour = "%h";
+	scheduler.config.header_date = "%m/%j/%Y";
+	//changes the click event of the "plus" button to point to the addCalendarItem page
+	scheduler.config.bottom_toolbar = [
+        { view:"button",id:"today",label:scheduler.locale.labels.icon_today,inputWidth:scheduler.xy.icon_today, align:"left",width:scheduler.xy.icon_today+6},
+        { view:"segmented", id:"buttons",selected:"month",align:"center",multiview:true, options:[
+            {value:"list", label:scheduler.locale.labels.list_tab,width:scheduler.xy.list_tab},
+            {value:"day", label:scheduler.locale.labels.day_tab,width:scheduler.xy.day_tab},
+            {value:"month", label:scheduler.locale.labels.month_tab,width:scheduler.xy.month_tab}
+        ]},
+        { view:"button",css:"add",id:"custom_add", align:"right",label:"&nbsp;+&nbsp;",inputWidth:42,width:50, click:function(){ window.location.href="./index.html#addCalendarItem"; }},
+        { view:"label", label:"",inputWidth:42,width:50, batch:"readonly"}
+    ];
+	//removes edit button from selected item view
+	scheduler.config.selected_toolbar = [
+	{view:'button', inputWidth:scheduler.xy.icon_back, id:"back", align:"left",  label:scheduler.locale.labels.icon_back, css:"cancel"}
+	];
+
+	dhx.ready(function(){
+
+		//object constructor
+		dhx.ui({
+			view: "scheduler",
+			id: "scheduler"
+		});
+		//load data from sharepoint
+		$$("scheduler").parse(slingshot.calendarXMLObject,"scheduler");
+		$$("scheduler").$$("calendar").define("startOnMonday",false);  //start month view rows on sunday
+		$$("scheduler").$$("delete").hide();  //hide delete option on details screen
+		$$("scheduler").$$("buttons").setValue("month");  //set initial view to month view
+	});
+};
+
+
 /*function updateOnlineStatus(newStatus)
 {
     if (newStatus != onlineStatus)

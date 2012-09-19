@@ -51,6 +51,8 @@ slingshot = new
         this.rootFolder = '/Shared Documents';
         this.testserver='slingshottest';
         this.taskListGuid = "";
+		this.calendarGuid = "";
+		this.calendarXMLObject="";
 
         // Function to retrieve an ODATA object by Id
         var getObject = function(uri, id, callback, errorCallback)
@@ -517,9 +519,77 @@ slingshot = new
                 contentType: 'text/xml; charset="utf-8"',
                 headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/workflow/AlterToDo"},
                 success: function(data) { callback(data, { statusCode:"201" });},
-                error: function(error) { callback(error);}
+                error: function(error) { errorCallback(error);}
             });
-        }
+        };
+		
+		//Function to get calendar List Items
+		this.getCalendarItems = function(calendarName, errorCallback){
+			if(slingshot.calendarGuid==""){
+                slingshot.getCalendarGuid(calendarName);
+            }
+
+            var getCalendarSOAPEnv=
+                ["<?xml version='1.0' encoding='utf-8'?>",
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'>",
+                    "<soap12:Body>",
+                        "<GetListItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'>",
+							"<listName>{",slingshot.calendarGuid,"}</listName>",
+							"<viewName></viewName>",
+							"<query></query>",
+							"<viewFields></viewFields>",
+							"<rowLimit></rowLimit>",
+							"<QueryOptions></QueryOptions>",
+							"<webID></webID>",
+						"</GetListItems>",
+                    "</soap12:Body>",
+                "</soap12:Envelope>"].join('');
+
+                $.ajax({
+                url: slingshot.listWebServiceUri,
+                username:slingshot.username,
+                password:slingshot.password,
+				async:false,
+                type: "POST",
+                dataType: "xml",
+                data: getCalendarSOAPEnv,
+                contentType: 'text/xml; charset="utf-8"',
+                headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/GetListItems"},
+                success: function(data, status, xhr) {
+					slingshot.parseCalendarResponse(xhr.responseText);},
+                error: function(error) { errorCallback(error);}
+            });
+		};
+		
+		//Function to parse response text to calendar object
+		this.parseCalendarResponse=function(response){
+			var responseArray=response.split('<');
+			slingshot.calendarXMLObject="<data>";
+			for(i =0; i<responseArray.length; i++){
+				if(responseArray[i].substr(0,1) == 'z'){
+					var itemIDArray=responseArray[i].substr(responseArray[i].indexOf('ows_ID'),16).split("'");
+					var itemID=itemIDArray[1];
+					var startDateArray=responseArray[i].substr(responseArray[i].indexOf('ows_EventDate'),36).split("'");
+					var startDate=startDateArray[1];
+					var endDateArray=responseArray[i].substr(responseArray[i].indexOf('ows_EndDate'),34).split("'");
+					var endDate=endDateArray[1];
+					var titleArray=responseArray[i].substr(responseArray[i].indexOf('ows_Title'),160).split("'");
+					var title=titleArray[1];
+					var descArray=responseArray[i].substr(responseArray[i].indexOf('ows_Description'),180).split("'");
+					console.log("descArray:"+descArray);
+					var desc=descArray[1].substring(11,descArray[1].length-12);
+					slingshot.calendarXMLObject=[slingshot.calendarXMLObject,
+					'<event id="',itemID,'">',
+						'<start_date>',startDate,'</start_date>',
+						'<end_date>',endDate,'</end_date>',
+						'<text>',title,'</text>',
+						'<details>',desc,'</details>',
+					'</event>'].join('');
+				}
+			}
+			slingshot.calendarXMLObject=[slingshot.calendarXMLObject,"</data>"].join('');
+			console.log(slingshot.calendarXMLObject);
+		};
 
         //Function to get GUID for Tasks list
         this.getListGuid = function(listName){
@@ -551,5 +621,105 @@ slingshot = new
             error: function(error) { callback(error);}
         });
         };
+		
+		//Function to get GUID for Calendar list
+		this.getCalendarGuid = function(calendarName){
+        var getListEnv =
+            ["<?xml version='1.0' encoding='utf-8'?>",
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'>",
+                    "<soap12:Body>",
+                        "<GetList xmlns='http://schemas.microsoft.com/sharepoint/soap/'>",
+                            "<listName>",calendarName,"</listName>",
+                        "</GetList>",
+                    "</soap12:Body>",
+                "</soap12:Envelope>"].join('');
+
+        $.ajax({
+            url: slingshot.listWebServiceUri,
+            username:slingshot.username,
+            password:slingshot.password,
+            async:false,
+            type: "POST",
+            dataType: "xml",
+            data: getListEnv,
+            contentType: 'text/xml; charset="utf-8"',
+            headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/GetList"},
+            success: function(data, status, xhr) {
+                var response = xhr.responseText;
+                var Guid = response.substr(response.indexOf("Name")+7, 36);
+                slingshot.calendarGuid=Guid;
+            },
+            error: function(error) { callback(error);}
+        });
+        };
+		
+		//Function to add calendar List Items
+		//Dates are "yyyy-mm-ddThh:mm:ssZ"
+		//allDay is 0=No 1=Yes
+		this.addCalendarItem = function(calendarName, errorCallback){
+			if(slingshot.calendarGuid==""){
+                slingshot.getCalendarGuid(calendarName);
+            }
+			var title = $('#addCalendarItem-Title').val();
+			var desc = $('#addCalendarItem-Desc').val();
+			var startDate = $('#addCalendarItem-StartDate').val();
+			var startTime = $('#addCalendarItem-StartTime').val();
+			var endDate = $('#addCalendarItem-EndDate').val();
+			var endTime = $('#addCalendarItem-EndTime').val();
+			var location = $('#addCalendarItem-Location').val();
+			
+            var addCalendarItemSOAPEnv=
+                ["<?xml version='1.0' encoding='utf-8'?>",
+                "<soap12:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap12='http://www.w3.org/2003/05/soap-envelope'>",
+                    "<soap12:Body>",
+                        "<UpdateListItems xmlns='http://schemas.microsoft.com/sharepoint/soap/'>",
+							"<listName>{",slingshot.calendarGuid,"}</listName>",
+							"<updates>",
+								"<Batch OnError='Continue' ListVersion='1'>",
+									"<Method ID='1' Cmd='New'>",
+										"<Field Name='ID'>New</Field>",
+										"<Field Name='Title'>",title,"</Field>",
+										"<Field Name='Description'>",desc,"</Field>",
+										"<Field Name='EventDate'>",startDate,"T",startTime,":00Z","</Field>",
+										"<Field Name='EndDate'>",endDate,"T",endTime,":00Z","</Field>",
+										"<Field Name='Location'>",location,"</Field>",
+									"</Method>",
+								"</Batch>",
+							"</updates>",
+						"</UpdateListItems>",
+                    "</soap12:Body>",
+                "</soap12:Envelope>"].join('');
+
+                $.ajax({
+                url: slingshot.listWebServiceUri,
+                username:slingshot.username,
+                password:slingshot.password,
+                type: "POST",
+                dataType: "xml",
+                data: addCalendarItemSOAPEnv,
+                contentType: 'text/xml; charset="utf-8"',
+                headers: {"SOAPAction":"http://schemas.microsoft.com/sharepoint/soap/UpdateListItems"},
+                success: function(data) {window.location.href="./calendar.html";},
+                error: function(error) { errorCallback(error);}
+            });
+		};
+		
+		//function to validate addCalendarItem data
+		this.validateAddCalendarItemData = function(){
+			var startDateArray = $('#addCalendarItem-StartDate').val().split('-');
+			var startTimeArray = $('#addCalendarItem-StartTime').val().split(':');
+			var startDate = new Date(startDateArray[0],startDateArray[1],startDateArray[2],startTimeArray[0],startTimeArray[1]);
+			var endDateArray = $('#addCalendarItem-EndDate').val().split('-');
+			var endTimeArray = $('#addCalendarItem-EndTime').val().split(':');
+			var endDate = new Date(endDateArray[0],endDateArray[1],endDateArray[2],endTimeArray[0],endTimeArray[1]);
+			if (startDate<endDate)
+			{
+				slingshot.addCalendarItem('Calendar', function(error){console.log(error);});
+			}
+			else
+			{
+				alert("The event must end after it begins! Please enter a valid End Date and Time.");
+			}
+		};
     };
 
