@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Module Name="SlingshotModule">
+  </Module>
+	<!-- Site Actions Dropdown -->
+	<CustomAction Id ="Slingshot.SiteActionsToolbar"
+				  Location ="Microsoft.SharePoint.StandardMenu"
+				  GroupId="SiteActions"
+				  ImageUrl="/_layouts/images/Neudesic/NeuPrecision.jpg"
+				  Rights="ManageLists,ManageWeb"
+				  Sequence="1000"
+				  Title="Slingshot View"
+				  Description="Slingshot View. Click to view application.">
+		<UrlAction Url= "_layouts/Neudesic/Index.aspx" />
+	</CustomAction>
+</Elements>

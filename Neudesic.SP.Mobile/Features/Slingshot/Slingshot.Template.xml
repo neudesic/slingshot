@@ -1,0 +1,12 @@
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" 
+		 Title="Neudesic Slingshot" 
+		 Description="Deploys slingshot related files and adds a Site Actions Menu Item at the bottom of Settings tab" 
+		 Id="a54f14da-1f7a-4064-aee8-d2df729532aa" 
+		 ReceiverAssembly="Neudesic.SP.Mobile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2bdba69b1e1d6a5" 
+		 ReceiverClass="Neudesic.SP.Mobile.SlingshotEventReceiver" 
+		 ImageUrl="Neudesic/Slingshot.gif"
+		 Scope="Web">
+  <ElementManifests>
+    <ElementManifest Location="SlingshotModule\Elements.xml" />
+  </ElementManifests>
+</Feature>

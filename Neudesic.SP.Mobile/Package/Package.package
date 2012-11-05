@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="372ab82d-15c1-4dee-acf1-ca6e2d254861" solutionId="372ab82d-15c1-4dee-acf1-ca6e2d254861" resetWebServer="false" name="Neudesic.SP.Mobile" isDesignerEnabled="false" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="23424c57-2030-43cf-8443-f6a415c9a8c9" />
+  </features>
+  <projectItems>
+    <projectItemReference itemId="9c2001a8-f2ce-4ad5-8759-0943d39b2be0" />
+    <projectItemReference itemId="41dcd639-210e-4e61-9af1-67320155bd07" />
+  </projectItems>
+</package>

@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Slingshot Demo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="Scripts/datajs-1.0.3.js"></script>
+    <script src="Scripts/jquery-1.7.2.min.js"></script>
+    <script src="Scripts/jquery.mobile-1.1.0.js"></script>
+    <script src="Scripts/webtoolkit-md5.js"></script>
+    <script src="Scripts/slingshot-data.js"></script>
+    <script src="Scripts/slingshot-jqm.js"></script>
+    <script type="text/javascript" src="Scripts/date.format.js"></script>
+	<script type="text/javascript" src="Scripts/dhxscheduler_mobile.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.core.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.datebox.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.calbox.min.js"></script>
+	<script type="text/javascript" src="Scripts/jqm-datebox.mode.flipbox.min.js"></script>
+    <link rel="stylesheet" href="Styles/jqm-datebox.min.css"/>
+    <link rel="stylesheet" href="Styles/jquery.mobile-1.1.0.min.css" />
+    <link rel="stylesheet" href="Styles/Android/android-theme.css"/>
+	<link rel="stylesheet" href="Styles/dhxscheduler_mobile.css"/>
+	
+</head>
+<body>
+    <div data-role="page" id="home">
+        <div data-role="header" data-position="fixed">
+			<a href="javascript:viewStandardSite();" data-icon="home">Home</a>
+            <h1>Slingshot Demo</h1>
+            <a href="#" class="ui-btn-right" id="logout-button" style="display: none;">Logout
+            </a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true">
+                <li><a href="#announcements">Announcements</a></li>
+                <li><a href="#tasks">Tasks</a></li>
+                <li><a href="#documents">Shared Documents</a></li>
+				<li><a onclick="javascript:viewCalendarPage();" id="calendar-button">Calendar</a></li>
+            </ul>
+            <ul data-role="listview" data-inset="true">
+                <li><a href="#people">People</a></li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="offline-status" style="display:none;">Connected</p>
+        </div>
+    </div>
+    <!--
+Page details for Announcements
+-->
+    <div data-role="page" id="announcements">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Announcements</h1>
+            <a href="javascript:addAnnouncement();" data-icon="add">New</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Announcements"
+                id="announcements-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="announcements-footer-text"></p>
+        </div>
+    </div>
+    <div data-role="page" id="announcement-details">
+        <div data-role="header" data-position="fixed">
+            <a href="#announcements" data-icon="arrow-l">Ann..</a>
+            <h1>Announcement</h1>
+            <a href="javascript:cancelAnnouncement();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="anouncement-id" id="announcement-id">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="announcement-title">Title</label>
+                    <input type="text" name="announcement-title" id="announcement-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="announcement-body">Body</label>
+                    <textarea cols="40" rows="8" name="announcement-body" id="announcement-body">
+                </textarea>
+                </li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="announcements-details-footer-text"></p>
+        </div>
+    </div>
+    <!--
+Page details for Tasks
+-->
+    <div data-role="page" id="tasks">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Tasks</h1>
+            <a href="javascript:addTask();" data-icon="add">New</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Tasks"
+                id="tasks-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="tasks-footer-text"></p>
+        </div>
+    </div>
+    <div data-role="page" id="task-details">
+        <div data-role="header" data-position="fixed">
+            <a href="#tasks" data-icon="arrow-l">Tasks</a>
+            <h1>Task</h1>
+            <a href="javascript:cancelTask();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="task-id" id="task-id">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="task-title">Title</label>
+                    <input type="text" name="task-title" id="task-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-description">Description</label>
+                    <textarea cols="40" rows="8" name="task-description" id="task-description">
+                </textarea>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-assignedTo">Assigned To</label>
+                    <input type="text" name="task-assignedTo" id="task-assignedTo"/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-status">Status</label>
+                    <input type="text" name="task-status" id="task-status"  />
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="task-pct-complete">Percentage Complete</label>
+                    <input type="range" name="task-pct-complete" id="task-pct-complete" data-type="range"
+                        value="50" min="0" max="100" data-highlight="true">
+                </li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="task-details-footer-text"></p>
+        </div>
+    </div>
+    <!--Page details for a workflow task-->
+    <div data-role="page" id="workflow-task-details">
+        <div data-role="header" data-position="fixed">
+            <a href="#tasks" data-icon="arrow-l">Tasks</a>
+            <h1>Workflow Task</h1>
+            <a href="javascript:cancelTask();" data-icon="delete">Cancel</a>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="task-id" id="workflow-task-id">
+            <ul data-role="listview" data-inset="true" id="workflow-task-listview">
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-title">Title</label>
+                    <input type="text" name="workflow-task-title" id="workflow-task-title">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-status">Status</label>
+                    <input type="text" name="workflow-task-status" id="workflow-task-status" disabled />
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-assignedTo">Assigned To</label>
+                    <input type="text" name="workflow-task-assignedTo" id="workflow-task-assignedTo" disabled/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-description">Description</label>
+                    <textarea cols="40" rows="8" name="workflow-task-description" id="workflow-task-description">
+                    </textarea>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-due-date">Due Date</label>
+                    <input type="datetime" name="workflow-task-due-date" id="workflow-task-due-date" disabled/>
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="workflow-task-outcome">Outcome</label>
+                    <input type="text" name="workflow-task-outcome" id="workflow-task-outcome" disabled/>
+                </li>
+                <!--<li data-role="fieldcontain">
+                    <label for="workflow-task-relatedContent">Related Content</label>
+                    <input type="text" name="workflow-task-relatedContent" id="workflow-task-relatedContent">
+                </li>-->
+            </ul>
+            <a rel="external" target="_blank" data-role="button" data-icon="info" data-mini="true" data-inline="true" id="workflow-document-button">View Document</a>
+            <br/>
+            <a data-role="button" data-icon="check" data-mini="true" data-inline="true" id="workflow-approve-button">Approve</a>
+            <a data-role="button" data-icon="minus" data-mini="true" data-inline="true" id="workflow-reject-button">Reject</a>
+
+
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="workflow-task-details-footer-text"></p>
+        </div>
+    </div>
+    <!--
+Page details for Documents
+-->
+    <div data-role="page" id="documents">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>Documents</h1>
+            <a href="javascript:showDocuments();" data-icon="refresh">Refresh</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search Shared Documents"
+                id="shareddocuments-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed" class="ui-bar">
+            <!--p id="shareddocuments-footer-text"></p-->
+            <!--TODO: tidy up footer on documents screen to include both text and button -->
+            <a id="documents-photo-button" href="javascript:addPhoto();" data-icon="add" style="display: none;
+                float: right; margin-right: 27px;">Photo</a>
+        </div>
+    </div>
+    <!--
+Page details for People
+-->
+    <div data-role="page" id="people">
+        <div data-role="header" data-position="fixed">
+            <a href="#home" data-icon="home">Home</a>
+            <h1>People</h1>
+            <a href="javascript:showPeople();" data-icon="refresh">Refresh</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-filter="true" data-filter-placeholder="Search People"
+                id="people-listview">
+                <li>Loading...</li>
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="people-footer-text"></p>
+        </div>
+    </div>
+    <div data-role="page" id="person-details">
+        <div data-role="header" data-position="fixed">
+            <a href="#people" data-icon="arrow-l">People</a>
+            <h1>Person</h1>
+        </div>
+        <div data-role="content">
+            <input type="hidden" name="person-id" id="person-id">
+            <div style="text-align: center; margin: 0 auto;">
+                <img id="person-gravatar">
+            </div>
+            <ul data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <label for="person-name">Name</label>
+                    <input type="text" name="person-name" id="person-name">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="person-jobTitle">Job Title</label>
+                    <input type="text" name="person-jobTitle" id="person-jobTitle">
+                </li>
+                <li data-role="fieldcontain">
+                    <label for="person-department">Department</label>
+                    <input type="text" name="person-department" id="person-department">
+                </li>
+            </ul>
+            <a href="#" data-role="button" id="person-email">Send Email</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="person-details-footer-text"></p>
+        </div>
+    </div>
+	<!--Page details for Calendar-->
+	<div data-role="page" id="addCalendarItem">
+		<div data-role="header" data-position="inline" id="calendar-header">
+            <a href="./calendar.html" data-icon="delete">Cancel</a>
+            <h1>Add Calendar Item</h1>
+        </div>
+        <div data-role="content" id="calendar-content">
+			<form action="javascript:slingshot.validateAddCalendarItemData();">
+				Title: <input type="text" id="addCalendarItem-Title" required="required" class="required"/><br/>
+				Location: <input type="text" id="addCalendarItem-Location" required="required" class="required"/><br/>
+				Start Date: <input name="addCalendarItem-StartDate" id="addCalendarItem-StartDate" type="text" data-role="datebox" data-options='{"mode": "calbox", "useTodayButton": true, "disableManualInput":true, "closeCallback": "$(\"#addCalendarItem-StartTime\").datebox(\"open\");"}' required="required"/ class="required"><br/>
+				Start Time: <input name="addCalendarItem-StartTime" id="addCalendarItem-StartTime" type="text" data-role="datebox" data-options='{"mode": "timeflipbox","overrideTimeFormat": 12}' required="required" class="required"/><br/>
+				End Date: <input name="addCalendarItem-EndDate" id="addCalendarItem-EndDate" type="text" data-role="datebox" data-options='{"mode": "calbox", "useTodayButton": true, "closeCallback": "$(\"#addCalendarItem-EndTime\").datebox(\"open\");"}' required="required" class="required"/><br/>
+				End Time: <input name="addCalendarItem-EndTime" id="addCalendarItem-EndTime" type="text" data-role="datebox" data-options='{"mode": "timeflipbox","overrideTimeFormat": 12}' required="required" class="required"/><br/>
+				Description: <textarea cols="40" rows="8" name="addCalendarItem-Desc" id="addCalendarItem-Desc" required="required" class="required"></textarea><br/>
+				<input type="submit" value="Add New Item"/>
+			</form>
+			<script type="text/javascript">
+			    $('<span style="color: #FF0000;">*</span>').insertBefore('.required');
+			</script>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <p id="calendar-footer-text"></p>
+        </div>
+	</div>
+	<!--<div data-role="page" id="calendar">
+		<script type="text/javascript">
+			initializeCalendar();
+		</script>
+	</div>-->
+</body>
+</html>

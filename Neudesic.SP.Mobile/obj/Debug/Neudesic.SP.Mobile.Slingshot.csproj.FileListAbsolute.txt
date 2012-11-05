@@ -1,0 +1,6 @@
+C:\projects\Neudesic\Neudesic.SP.Mobile\bin\Debug\Neudesic.SP.Mobile.dll
+C:\projects\Neudesic\Neudesic.SP.Mobile\bin\Debug\Neudesic.SP.Mobile.pdb
+C:\projects\Neudesic\Neudesic.SP.Mobile\bin\Debug\Microsoft.Sharepoint.Sandbox.dll
+C:\projects\Neudesic\Neudesic.SP.Mobile\obj\Debug\ResolveAssemblyReference.cache
+C:\projects\Neudesic\Neudesic.SP.Mobile\obj\Debug\Neudesic.SP.Mobile.dll
+C:\projects\Neudesic\Neudesic.SP.Mobile\obj\Debug\Neudesic.SP.Mobile.pdb

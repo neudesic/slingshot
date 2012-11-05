@@ -1,0 +1,69 @@
+<Solution xmlns="http://schemas.microsoft.com/sharepoint/" SolutionId="372ab82d-15c1-4dee-acf1-ca6e2d254861" SharePointProductVersion="14.0">
+  <Assemblies>
+	  <Assembly Location="Neudesic.SP.Mobile.dll" DeploymentTarget="GlobalAssemblyCache">
+		  <SafeControls>
+			  <SafeControl Assembly="Neudesic.SP.Mobile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2bdba69b1e1d6a5" Namespace="Neudesic.SP.Mobile" TypeName="*" />
+		  </SafeControls>
+	  </Assembly>
+  </Assemblies>
+  <TemplateFiles>
+    <TemplateFile Location="Layouts\Neudesic\Index.aspx" />
+    <TemplateFile Location="Layouts\Neudesic\.gitignore" />
+    <TemplateFile Location="Layouts\Neudesic\calendar.html" />
+    <TemplateFile Location="Layouts\Neudesic\index.html" />
+    <TemplateFile Location="Layouts\Neudesic\login.html" />
+    <TemplateFile Location="Layouts\Neudesic\README.md" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\Android\cordova-1.7.0.old.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\datajs-1.0.3.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\date.format.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\dhxscheduler_mobile.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\iOS\cordova-1.7.0.old.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\iOS\cordova-1.8.1.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jqm-datebox.core.min.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jqm-datebox.mode.calbox.min.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jqm-datebox.mode.datebox.min.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jqm-datebox.mode.flipbox.min.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jquery-1.7.2.min.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\jquery.mobile-1.1.0.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\slingshot-data.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\slingshot-jqm.js" />
+    <TemplateFile Location="Layouts\Neudesic\Scripts\webtoolkit-md5.js" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\android-theme.css" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\android-theme.scss" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\images\ajax-loader.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\images\icons-18-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\images\icons-18-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\images\icons-36-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\images\icons-36-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\android\jquery.mobile.android-theme.js" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\ajax-loader.gif" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\ajax-loader.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\icons-18-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\icons-18-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\icons-36-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\images\icons-36-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\default\jquery.mobile-1.1.0.min.css" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\dhxscheduler_mobile.css" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\ajax-loader.gif" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\ajax-loader.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\icons-18-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\icons-18-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\icons-36-black.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\images\icons-36-white.png" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\jqm-datebox.min.css" />
+    <TemplateFile Location="Layouts\Neudesic\Styles\jquery.mobile-1.1.0.min.css" />
+    <TemplateFile Location="Layouts\Neudesic\Support\compat.browser" />
+    <TemplateFile Location="Layouts\Neudesic\Tests\index.html" />
+    <TemplateFile Location="Layouts\Neudesic\Tests\Scripts\qunit.js" />
+    <TemplateFile Location="Layouts\Neudesic\Tests\Scripts\test.js" />
+    <TemplateFile Location="Layouts\Neudesic\Tests\Styles\qunit.css" />
+    <TemplateFile Location="Layouts\Neudesic\CanNotActivateSlingshotFeature.aspx" />
+    <TemplateFile Location="Images\Neudesic\MobilePhone.jpg" />
+    <TemplateFile Location="Images\Neudesic\NeuFeatures.gif" />
+    <TemplateFile Location="Images\Neudesic\Slingshot.gif" />
+    <TemplateFile Location="Images\Neudesic\NeuPrecision.jpg" />
+  </TemplateFiles>
+  <FeatureManifests>
+    <FeatureManifest Location="Neudesic.SP.Mobile.Slingshot_Slingshot\Feature.xml" />
+  </FeatureManifests>
+</Solution>
