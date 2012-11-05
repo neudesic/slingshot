@@ -507,6 +507,15 @@ var getPictureError = function(message)
     console.log(message);
 };
 
+//function to build calendar URL with qs param
+function viewCalendarPage(){
+	window.location='./calendar.html?WebUrl='+slingshot.server;
+	}
+	
+function viewHomePage(){
+	window.location='./index.html?WebUrl='+slingshot.server+'#home';
+	}
+
 //function to initialize the mobile calendar
 function initializeCalendar(){
 	slingshot.getCalendarItems('Calendar', function(error){console.log(error);});
@@ -528,7 +537,7 @@ function initializeCalendar(){
             {value:"day", label:scheduler.locale.labels.day_tab,width:scheduler.xy.day_tab},
             {value:"month", label:scheduler.locale.labels.month_tab,width:scheduler.xy.month_tab}
         ]},
-        { view:"button",css:"add",id:"custom_add", align:"right",label:"&nbsp;+&nbsp;",inputWidth:42,width:50, click:function(){ window.location.href="./index.html#addCalendarItem"; }},
+        { view:"button",css:"add",id:"custom_add", align:"right",label:"&nbsp;+&nbsp;",inputWidth:42,width:50, click:function(){ window.location.href="./index.html?WebUrl="+slingshot.server+"#addCalendarItem"; }},
         { view:"label", label:"",inputWidth:42,width:50, batch:"readonly"}
     ];
 	//removes edit button from selected item view
@@ -541,7 +550,8 @@ function initializeCalendar(){
 		//object constructor
 		dhx.ui({
 			view: "scheduler",
-			id: "scheduler"
+			id: "scheduler",
+			container: "calendarDiv"
 		});
 		//load data from sharepoint
 		$$("scheduler").parse(slingshot.calendarXMLObject,"scheduler");
@@ -551,6 +561,43 @@ function initializeCalendar(){
 	});
 };
 
+var windowHeight=0;
+var windowWidth=0;
+var calHeight=0;
+//function to set the size of the calendar
+function setCalendarSize(){
+	if(window.innerHeight != 0 || window.innerWidth!=0)
+	{
+		windowHeight=window.innerHeight;
+		windowWidth=window.innerWidth;
+	}
+	else if(document.documentElement.clientHeight!=0 || document.documentElement.clientWidth!=0)
+	{
+		windowHeight=document.documentElement.clientHeight;
+		windowWidth=document.documentElement.clientWidth;
+	}
+	else
+	{
+		windowHeight=document.body.clientHeight;
+		windowWidth=document.body.clientWidth;
+	}
+	
+	var headerHeight = 48;
+	calHeight=windowHeight-headerHeight;
+	$('#calendarDiv').css('width', windowWidth);
+	$('#calendarDiv').css('height', calHeight);
+};
+
+function reDrawCalendar(){
+	setCalendarSize();
+	$$("scheduler").define("width", windowWidth);
+	$$("scheduler").define("height", calHeight);
+	$$("scheduler").resize();
+};
+
+function viewStandardSite(){
+	window.location="http://"+slingshot.server;
+};
 
 /*function updateOnlineStatus(newStatus)
 {

@@ -26,6 +26,7 @@
 <body>
     <div data-role="page" id="home">
         <div data-role="header" data-position="fixed">
+			<a href="javascript:viewStandardSite();" data-icon="home">Standard View</a>
             <h1>Slingshot Demo</h1>
             <a href="#" class="ui-btn-right" id="logout-button" style="display: none;">Logout
             </a>
@@ -35,7 +36,7 @@
                 <li><a href="#announcements">Announcements</a></li>
                 <li><a href="#tasks">Tasks</a></li>
                 <li><a href="#documents">Shared Documents</a></li>
-				<li><a onclick="window.open('./calendar.html','_blank')" id="calendar-button">Calendar</a></li>
+				<li><a onclick="javascript:viewCalendarPage();" id="calendar-button">Calendar</a></li>
             </ul>
             <ul data-role="listview" data-inset="true">
                 <li><a href="#people">People</a></li>
@@ -269,11 +270,10 @@ Page details for People
 	<!--Page details for Calendar-->
 	<div data-role="page" id="addCalendarItem">
 		<div data-role="header" data-position="inline" id="calendar-header">
-            <a href="./calendar.html" data-icon="arrow-l">Back</a>
+            <a href="./calendar.html" data-icon="delete">Cancel</a>
             <h1>Add Calendar Item</h1>
         </div>
         <div data-role="content" id="calendar-content">
-			<!--<form action="javascript:slingshot.addCalendarItem('Calendar', function(error){console.log(error);});">-->
 			<form action="javascript:slingshot.validateAddCalendarItemData();">
 				Title: <input type="text" id="addCalendarItem-Title" required="required" class="required"/><br/>
 				Location: <input type="text" id="addCalendarItem-Location" required="required" class="required"/><br/>
@@ -292,5 +292,10 @@ Page details for People
             <p id="calendar-footer-text"></p>
         </div>
 	</div>
+	<!--<div data-role="page" id="calendar">
+		<script type="text/javascript">
+			initializeCalendar();
+		</script>
+	</div>-->
 </body>
 </html>

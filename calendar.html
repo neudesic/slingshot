@@ -17,13 +17,21 @@
     <link rel="stylesheet" href="Styles/jquery.mobile-1.1.0.min.css" />
     <link rel="stylesheet" href="Styles/Android/android-theme.css"/>
 	<link rel="stylesheet" href="Styles/dhxscheduler_mobile.css"/>
-</head>
-<body>
-<script type="text/javascript">
-$(document).ready(function(){
-	initializeCalendar();
-});
+	<script type="text/javascript">
+		$(document).ready(function(){
+		setCalendarSize();
+		initializeCalendar();
+		}); 
+
 </script>
+</head>
+<body onresize='reDrawCalendar()'>
+	<div data-role="header" data-position="fixed" id="header">
+        <a href="javascript:viewHomePage()" data-icon="home">Home</a>
+        <h1>Calendar</h1>
+    </div> 
+	<div id="calendarDiv" style="width:800; height:600;">
+</div>
 
 </body>
 </html>
